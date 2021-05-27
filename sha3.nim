@@ -116,7 +116,7 @@ proc sha3_update*(c: var SHA3, data: cstring|string|seq|uint8,
                   data_size: int) =
    for i in 0..<data_size:
       when data is cstring or data is string:
-         c.buffer[c.buffer_idx] = ord(data[i])
+         c.buffer[c.buffer_idx] = ord(data[i]).uint8
       elif data is seq:
          c.buffer[c.buffer_idx] = data[i]
       else:
@@ -258,14 +258,14 @@ when isMainModule:
       try:
          sha3_init(ktx, 16, "abc", 3)
          splt = split(f.readLine(), ':')
-         Aaa = cstring(repeatStr(parseInt(splt[0]), "abc"))
+         Aaa = cstring("abc".repeat(parseInt(splt[0])))
          for i in 0..high(Aaa):
             sha3_update(ktx, ($Aaa[i]).cstring, 1)
          assert($sha3_final(ktx) == toLowerAscii(splt[1]))
       except IOError: break
    close(f)
    assert(getSHA3("a", 16) == "9ead6b5332e658d12672d3ab0de17f12")
-   assert(getSHA3(nil, 16) == "1ac2d450fc3b4205d19da7bfca1b3751")
+   assert(getSHA3("", 16) == "1ac2d450fc3b4205d19da7bfca1b3751")
    assert(getSHA3("abc", 4) == "ab174f32")
    assert(getSHA3("The quick brown fox jumps over the lazy dog") == "b4f249b4f77c58df170aa4d1723db112")
 
@@ -339,9 +339,9 @@ when isMainModule:
          try:
             discard f.readLine()
             data = f.readLine()
-            data = hex2str(data[6..^0])
+            data = hex2str(data[6..^1])
             hash = f.readLine()
-            hash = hash[5..^0]
+            hash = hash[5..^1]
             assert(getSHA3(t[0], data) == hash)
             sha3_init(ctx, t[0])
             for i in 0..high(data):
@@ -356,9 +356,9 @@ when isMainModule:
          try:
             discard f.readLine()
             data = f.readLine()
-            data = hex2str(data[6..^0])
+            data = hex2str(data[6..^1])
             hash = f.readLine()
-            hash = hash[9..^0]
+            hash = hash[9..^1]
             assert(getSHA3(t[0], data) == hash)
             sha3_init(ctx, t[0])
             for i in 0..high(data):

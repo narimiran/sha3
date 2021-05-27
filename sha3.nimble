@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.6"
+version       = "0.7"
 author        = "tankfeeder"
 description   = "sha3 library"
 license       = "CC0"
